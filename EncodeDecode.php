@@ -1,37 +1,21 @@
 <?php
 
-    //load json file
-    $data = file_get_contents('./Catalog_data.json');
+// _author_ Shruti Jain
 
-    //decode json data
-    $array = json_decode($data, true);
-    $id = 1;
+$data = file_get_contents('./Catalog_data.json');       //load json file
+$array = json_decode($data, true);                      //decode json data
+$id = 1;
 
-$fp = fopen('./changed.json', 'a');
-    foreach ($array as &$element) {
-        //$element["_id"]=$id++;
-        $a = array("_id"=>$id++) + array("_type"=>'data');
-        $element= array("index"=>$a) + $element;
-        fwrite($fp, json_encode($element));
-        fwrite($fp,"\n");
-    }
-    fclose($fp);
+$fp = fopen('./Formatted_data.json', 'a');                  //open json file in append mode
+foreach ($array as &$element) {
+    //$element["_id"]=$id++;
+    $a = array("_id"=>$id++) + array("_type"=>'data'); //add id and type field
+    $element= array("index"=>$a) + $element;            //add new fields in beginning
+    fwrite($fp, json_encode($element));                 //write encoded element to another file
+    fwrite($fp,"\n");                                   //write newline char in end of every element
+}
+fclose($fp);                                            //close json file
 
-	//var_dump($array);
-
-   /*
-	foreach ($array as $element)
-    {
-        $new_element  = json_encode($element);
-        fwrite($fp, $new_element);
-
-	}
-
-fclose($fp);
-   */
-
-//$new_file  = json_encode($array,JSON_PRETTY_PRINT);
-//    file_put_contents('formatted_data3.json',$new_file);
 
 ?>
 
