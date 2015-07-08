@@ -1,29 +1,28 @@
 <?php
-
 require_once 'init.php';
 if(isset($_GET['q']))
 {    $q = $_GET['q'];
 
-
-    $params['index'] = 'laptopcatalog';
+    $params['index'] = 'index';
     $params['type']  = 'data';
-    $params['id'] = 'AU5essmFay6lZW87s5-a';
-    $params['body']['query']['bool']['must'] = array('match' => array('model' => $q));
 
+    //query
+    $params['body']['query']['match']['model'] =  $q;
+
+    //filter
+
+
+    //call search() in elasticsearch
     $query  = $es->search($params);
 
-    echo '<pre>', print_r($query), '</pre>';
-    //   die();
-}
-/*        if($query['hits']['total'] >1)
+    //store results of query in $results
+      if($query['hits']['total'] >1)
         {
             $results = $query['hits']['hits'];
-
         }
-
-}*/
-
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,12 +33,32 @@ if(isset($_GET['q']))
 
 <body>
 
-<form name="form1" action="homepage.php"    method = "get" >
+<form name="form1" action="SearchPage.php"    method = "get" >
     <input name = "q" type ="text" />
     <input type = "submit" name ="submit" value = "search" />
 </form>
 
+<?php
+if(isset($results))
+{
+    foreach($results as $r)
+    {
 
+?>
+         <div class="results">
+             <p>
+                <img class = "image" src = "<?php echo  $r['_source']['image'][0] ?> "/>
+                <div class="Offer"><?php echo $r['_source']['offer'][0] ; ?></div>
+
+                <a href="Details.php?id=<?php echo $r['_id']; ?>"><?php echo $r['_source']['standard_url']; ?></a>
+
+             </p>
+        </div>
+<?php
+
+    }
+}
+?>
 
 </body>
 </html>
